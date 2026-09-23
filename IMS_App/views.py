@@ -1,5 +1,10 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from .models import PrintJob
 # Create your views here.
-def index(request):
-    return HttpResponse("Welcome to Django!")
+def print_list(request):
+    print_jobs = PrintJob.objects.all()
+
+    context = {
+        'print_jobs': print_jobs
+    }
+    return render(request, 'PrintApp/dashboard.html', context)

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Print Job Dashboard</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 40px auto;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: #777;
+            margin-top: 0;
+            margin-bottom: 25px;
+        }
+
+        .table-container {
+            background-color: white;
+            border-radius: 8px;
+            overflow-x: auto;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background-color: #2c3e50;
+            color: white;
+            padding: 14px;
+            text-align: left;
+        }
+
+        td {
+            padding: 12px 14px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .status {
+            font-weight: bold;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 30px;
+            color: #777;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Print Job Dashboard</h1>
+        <p class="subtitle">List of submitted print jobs</p>
+
+        <div class="table-container">
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Job ID</th>
+                        <th>Customer Name</th>
+                        <th>Print Type</th>
+                        <th>Paper Size</th>
+                        <th>Quantity</th>
+                        <th>Color Mode</th>
+                        <th>Total Price</th>
+                        <th>Date Submitted</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for job in print_jobs %}
+                    <tr>
+                        <td>{{ job.job_id }}</td>
+                        <td>{{ job.customer_name }}</td>
+                        <td>{{ job.print_type }}</td>
+                        <td>{{ job.paper_size }}</td>
+                        <td>{{ job.quantity }}</td>
+                        <td>{{ job.color_mode }}</td>
+                        <td>₱{{ job.total_price }}</td>
+                        <td>{{ job.date_submitted|date:"M d, Y h:i A" }}</td>
+                        <td class="status">{{ job.print_status }}</td>
+                    </tr>
+
+                    {% empty %}
+                    <tr>
+                        <td colspan="9" class="empty-message">
+                            No print jobs found.
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+        </div>
+
+    </div>
+
+</body>
+</html>
