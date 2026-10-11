@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PaPrint - Edit Print Job</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        :root {
+            --surface: #ffffff;
+            --surface-soft: #f8f8fc;
+            --line: #e8e7f0;
+            --text: #3f3a59;
+            --muted: #918ca9;
+            --purple: #6f63ff;
+            --purple-dark: #5d52ea;
+            --yellow: #d9a637;
+            --yellow-soft: #fff6dc;
+            --sidebar: #f8f8fb;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100%;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #ffffff;
+            color: var(--text);
+        }
+
+        .app-shell {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 76px 1fr;
+        }
+
+        .sidebar {
+            min-height: 100vh;
+            background: var(--sidebar);
+            border-right: 1px solid var(--line);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+            gap: 24px;
+        }
+
+        .logo {
+            width: 42px;
+            height: 42px;
+            position: relative;
+            margin-bottom: 8px;
+        }
+
+        .logo span {
+            position: absolute;
+            width: 17px;
+            height: 17px;
+            border-radius: 50%;
+        }
+
+        .logo .c1 {
+            background: #f1788c;
+            top: 0;
+            left: 13px;
+        }
+
+        .logo .c2 {
+            background: #7868ff;
+            top: 11px;
+            left: 0;
+        }
+
+        .logo .c3 {
+            background: #6bc550;
+            top: 11px;
+            right: 0;
+        }
+
+        .logo .c4 {
+            background: #f1bc42;
+            bottom: 0;
+            left: 13px;
+        }
+
+        .logo .c5 {
+            background: #617fff;
+            width: 13px;
+            height: 13px;
+            top: 18px;
+            left: 15px;
+        }
+
+        .nav-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            border: 1px solid #dedaff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--purple);
+            background: #efedff;
+            text-decoration: none;
+        }
+
+        .nav-icon svg {
+            width: 19px;
+            height: 19px;
+        }
+
+        .main {
+            min-width: 0;
+            min-height: 100vh;
+        }
+
+        .topbar {
+            min-height: 78px;
+            border-bottom: 1px solid var(--line);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+        }
+
+        .page-title {
+            font-size: 27px;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+        }
+
+        .account {
+            color: #504b68;
+            font-size: 14px;
+        }
+
+        .content {
+            min-height: calc(100vh - 78px);
+            background: #fafafd;
+            padding: 38px;
+        }
+
+        .form-wrapper {
+            width: min(760px, 100%);
+            margin: 0 auto;
+        }
+
+        .page-heading {
+            margin-bottom: 22px;
+        }
+
+        .page-heading h1 {
+            margin: 0;
+            font-size: 28px;
+            color: #3f3a59;
+        }
+
+        .page-heading p {
+            margin: 8px 0 0;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .form-card {
+            background: white;
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(68, 63, 105, 0.06);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #57526e;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        input,
+        select {
+            width: 100%;
+            min-height: 44px;
+            border: 1px solid #dfdeea;
+            border-radius: 10px;
+            padding: 0 13px;
+            background: #f9f9fc;
+            color: #4e4965;
+            outline: none;
+        }
+
+        input:focus,
+        select:focus {
+            background: #ffffff;
+            border-color: #c7c1ff;
+            box-shadow: 0 0 0 3px rgba(111, 99, 255, 0.08);
+        }
+
+        .errorlist {
+            list-style: none;
+            margin: 7px 0 0;
+            padding: 0;
+            color: #d45487;
+            font-size: 12px;
+        }
+
+        .actions {
+            border-top: 1px solid var(--line);
+            padding-top: 22px;
+            margin-top: 8px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .cancel-btn,
+        .save-btn {
+            min-height: 42px;
+            border-radius: 10px;
+            padding: 0 18px;
+            font-size: 13px;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+        }
+
+        .cancel-btn {
+            background: #f0eff5;
+            color: #625d79;
+        }
+
+        .save-btn {
+            background: var(--purple);
+            color: white;
+        }
+
+        .save-btn:hover {
+            background: var(--purple-dark);
+        }
+
+        @media (max-width: 700px) {
+            .app-shell {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app-shell">
+
+        <aside class="sidebar">
+
+            <div class="logo">
+                <span class="c1"></span>
+                <span class="c2"></span>
+                <span class="c3"></span>
+                <span class="c4"></span>
+                <span class="c5"></span>
+            </div>
+
+            <a href="{% url 'print_list' %}" class="nav-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <path d="M3 10.5L12 3l9 7.5"></path>
+                    <path d="M5.5 9.5V21h13V9.5"></path>
+                    <path d="M9.5 21v-6h5v6"></path>
+                </svg>
+            </a>
+
+        </aside>
+
+        <main class="main">
+
+            <header class="topbar">
+                <div class="page-title">
+                    Edit Print Job
+                </div>
+
+                <div class="account">
+                    My Account ▾
+                </div>
+            </header>
+
+            <section class="content">
+
+                <div class="form-wrapper">
+
+                    <div class="page-heading">
+                        <h1>Update Order #{{ print_job.job_id }}</h1>
+                        <p>Edit the print job information below.</p>
+                    </div>
+
+                    <div class="form-card">
+
+                        <form method="POST">
+
+                            {% csrf_token %}
+
+                            <div class="form-grid">
+
+                                <div class="form-group">
+                                    <label for="{{ form.customer_name.id_for_label }}">
+                                        Customer Name
+                                    </label>
+
+                                    {{ form.customer_name }}
+                                    {{ form.customer_name.errors }}
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="{{ form.print_type.id_for_label }}">
+                                        Print Type
+                                    </label>
+
+                                    {{ form.print_type }}
+                                    {{ form.print_type.errors }}
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="{{ form.paper_size.id_for_label }}">
+                                        Paper Size
+                                    </label>
+
+                                    {{ form.paper_size }}
+                                    {{ form.paper_size.errors }}
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="{{ form.quantity.id_for_label }}">
+                                        Quantity
+                                    </label>
+
+                                    {{ form.quantity }}
+                                    {{ form.quantity.errors }}
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="{{ form.color_mode.id_for_label }}">
+                                        Color Mode
+                                    </label>
+
+                                    {{ form.color_mode }}
+                                    {{ form.color_mode.errors }}
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="{{ form.total_price.id_for_label }}">
+                                        Total Price
+                                    </label>
+
+                                    {{ form.total_price }}
+                                    {{ form.total_price.errors }}
+                                </div>
+
+                                <div class="form-group full">
+                                    <label for="{{ form.print_status.id_for_label }}">
+                                        Status
+                                    </label>
+
+                                    {{ form.print_status }}
+                                    {{ form.print_status.errors }}
+                                </div>
+
+                            </div>
+
+                            <div class="actions">
+
+                                <a
+                                    href="{% url 'print_list' %}"
+                                    class="cancel-btn"
+                                >
+                                    Cancel
+                                </a>
+
+                                <button
+                                    type="submit"
+                                    class="save-btn"
+                                >
+                                    Save Changes
+                                </button>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+</body>
+</html>
