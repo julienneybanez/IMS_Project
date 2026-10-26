@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PaPrint — Reports</title>
+<style>
+:root{--purple:#7063f1;--text:#3e3a56;--muted:#77718e;--line:#e9e7f1}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f7f7fc;color:var(--text)}
+header{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:20px max(22px,5vw);background:#fff;border-bottom:1px solid var(--line)}
+header strong{font-size:22px}nav{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+a{color:var(--purple);text-decoration:none;font-weight:bold}.btn,button{background:var(--purple);color:#fff;border:0;padding:11px 14px;border-radius:10px;font:inherit;cursor:pointer}
+button{background:#eeeafa;color:#5b5288}main{max-width:1100px;margin:25px auto;padding:0 20px}
+h1{margin-bottom:6px}p{color:var(--muted)}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin:24px 0}
+.card{background:#fff;border:1px solid var(--line);border-radius:15px;padding:20px;min-width:0}.card span{display:block;color:var(--muted);font-size:13px}.card strong{display:block;font-size:26px;margin-top:10px;overflow-wrap:anywhere}
+table{border-collapse:collapse;width:100%;background:#fff;border-radius:14px;overflow:hidden}
+th,td{text-align:left;padding:16px;border-bottom:1px solid var(--line)}th{background:#f0eefc;color:#56516f}td:last-child,th:last-child{text-align:right}
+.panel{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;margin-top:25px}.panel h2{margin:0;padding:20px;font-size:19px}
+@media(max-width:500px){th,td{padding:11px;font-size:13px}.card strong{font-size:22px}}
+</style>
+</head>
+<body>
+<header>
+<strong>PaPrint · Reports</strong>
+<nav>
+<a href="{% url 'print_list' %}">Dashboard</a>
+<a href="{% url 'admin:index' %}">Django Admin</a>
+<a class="btn" href="{% url 'export_sales_csv' %}">Export CSV</a>
+<form method="post" action="{% url 'logout' %}">{% csrf_token %}<button type="submit">Log out</button></form>
+</nav>
+</header>
+<main>
+<h1>Sales and order reports</h1>
+<p>Live data from the print job database. Revenue includes Completed orders only; Pending, Processing, Ready and Cancelled orders are excluded.</p>
+<section class="cards">
+<div class="card"><span>Total print jobs</span><strong>{{ total_jobs }}</strong></div>
+<div class="card"><span>Completed jobs</span><strong>{{ completed_jobs }}</strong></div>
+<div class="card"><span>Pending jobs</span><strong>{{ pending_jobs }}</strong></div>
+<div class="card"><span>Processing jobs</span><strong>{{ processing_jobs }}</strong></div>
+<div class="card"><span>Ready for pickup</span><strong>{{ ready_jobs }}</strong></div>
+<div class="card"><span>Unique customers</span><strong>{{ customer_count }}</strong></div>
+<div class="card"><span>Total completed revenue</span><strong>₱{{ total_revenue }}</strong></div>
+</section>
+<section class="panel">
+<h2>Completed sales — last six calendar months</h2>
+<table>
+<thead><tr><th>Month</th><th>Completed orders</th><th>Revenue (PHP)</th></tr></thead>
+<tbody>
+{% for month in monthly_sales %}
+<tr><td>{{ month.label }}</td><td>{{ month.orders }}</td><td>₱{{ month.revenue }}</td></tr>
+{% empty %}
+<tr><td colspan="3">No sales data yet.</td></tr>
+{% endfor %}
+</tbody>
+</table>
+</section>
+</main>
+</body>
+</html>

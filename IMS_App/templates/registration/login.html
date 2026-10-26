@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PaPrint — Staff Login</title>
+<style>
+*{box-sizing:border-box}body{font-family:Arial,Helvetica,sans-serif;margin:0;min-height:100vh;background:linear-gradient(135deg,#f7f6fd,#eeebff);display:grid;place-items:center;color:#45405e}
+main{background:#fff;width:min(420px,calc(100% - 32px));padding:34px;border:1px solid #e8e6f3;border-radius:18px;box-shadow:0 12px 32px #4339921c}
+h1{margin:0 0 8px;font-size:28px}p{margin:0 0 26px;color:#77718d;line-height:1.5}
+label{display:block;font-size:13px;font-weight:bold;margin:17px 0 8px}
+input{width:100%;font:inherit;border:1px solid #cbc9d8;border-radius:10px;padding:12px;outline:none}
+input:focus{border-color:#7668f7;box-shadow:0 0 0 3px #7668f722}
+button{margin-top:24px;width:100%;border:0;border-radius:10px;background:#7063f1;color:#fff;font-size:15px;font-weight:bold;padding:13px;cursor:pointer}
+.errorlist{color:#ba2955;font-size:13px;padding-left:18px}
+</style>
+</head>
+<body>
+<main>
+<h1>PaPrint Staff</h1>
+<p>Sign in using your authorized Django staff account to manage print orders.</p>
+<form method="post" action="{% url 'login' %}">
+{% csrf_token %}
+{{ form.non_field_errors }}
+<label for="{{ form.username.id_for_label }}">Username</label>
+{{ form.username }}{{ form.username.errors }}
+<label for="{{ form.password.id_for_label }}">Password</label>
+{{ form.password }}{{ form.password.errors }}
+{% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+<button type="submit">Sign in</button>
+</form>
+</main>
+</body>
+</html>

@@ -736,6 +736,27 @@
             }
         }
     </style>
+<style>
+/* Live dashboard upgrades */
+.status.ready,.mini-status.ready { background:#eaf4ff; color:#2967aa; }
+.status.ready { background:#2878b5; color:#fff; }
+.workflow-bar { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; padding:18px; border-radius:16px; background:linear-gradient(105deg,#705cff,#6482fb); color:#fff; }
+.workflow-bar div { display:flex; flex-direction:column;align-items:center;gap:6px; }
+.workflow-bar strong { font-size:23px; }
+.workflow-bar span { font-size:11px; }
+.sales-chart {display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:7px;height:195px;align-items:end;padding:15px 8px;border:1px solid #ecebf3;border-radius:14px;}
+.sales-column {height:100%;min-width:0;display:flex;align-items:center;flex-direction:column;justify-content:flex-end;gap:7px;}
+.sales-bar {width:70%;max-width:36px;min-height:3px;background:linear-gradient(180deg,#7e73ff,#b5aaff);border-radius:8px 8px 2px 2px;}
+.bar-amount,.bar-month {font-size:10px;white-space:nowrap;color:#77718f;}
+.bar-amount {font-size:9px;}
+.summary-stats {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;}
+.summary-stats div {padding:12px;background:#f5f4fc;border:1px solid #ebe9f6;border-radius:10px;min-width:0;}
+.summary-stats span {font-size:11px;color:#77718f;display:block;margin-bottom:5px;}
+.summary-stats strong {font-size:18px;color:#4e4868;overflow-wrap:anywhere;}
+.topbar-right {gap:12px;flex-wrap:wrap;}
+.search-wrap {flex-wrap:wrap;}
+@media(max-width:650px){.workflow-bar{grid-template-columns:repeat(2,1fr)} .topbar-right{gap:8px}.sales-chart{gap:3px}.bar-amount,.bar-month{font-size:8px}}
+</style>
 </head>
 
 <body>
@@ -777,14 +798,18 @@
                         <input
                             type="text"
                             id="searchInput"
-                            placeholder="Order No."
+                            placeholder="Search ID or customer"
                             oninput="searchJobs()"
                         >
 
-                        <div class="search-extra">
-                            <span>View All</span>
-                            <span>↻</span>
-                        </div>
+                        <select id="statusFilter" aria-label="Filter by order status" onchange="searchJobs()" style="border:1px solid #dedbea;border-radius:8px;padding:8px;background:#fff;color:#4e4965;font-size:12px">
+                            <option value="">All statuses</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Processing">Processing</option>
+                            <option value="Ready">Ready</option>
+                            <option value="Completed">Completed</option>
+                            <option value="Cancelled">Cancelled</option>
+                        </select>
 
                     </div>
 
@@ -799,9 +824,12 @@
                         + New Job
                     </a>
 
-                    <div class="account">
-                        My Account ▾
-                    </div>
+                    <a href="{% url 'reports' %}" class="account" style="text-decoration:none">Reports</a>
+                    <a href="{% url 'admin:index' %}" class="account" style="text-decoration:none">Django Admin</a>
+                    <form method="post" action="{% url 'logout' %}" style="margin:0">
+                        {% csrf_token %}
+                        <button type="submit" class="account" style="border:0;background:none;cursor:pointer">Log out</button>
+                    </form>
 
                 </div>
 
@@ -841,7 +869,7 @@
 
                         {% for job in print_jobs %}
 
-                            <div class="job-row job-item">
+                            <div class="job-row job-item" data-search="{{ job.job_id }} {{ job.customer_name|lower }}" data-status="{{ job.print_status }}">
 
                                 <div class="job-stats">
 
@@ -917,28 +945,11 @@
 
                     </div>
 
-                    <div class="timeline">
-
-                        <div class="step">
-                            <div class="step-circle">✓</div>
-                            <div class="step-label">Submitted</div>
-                        </div>
-
-                        <div class="step">
-                            <div class="step-circle">✓</div>
-                            <div class="step-label">Queued</div>
-                        </div>
-
-                        <div class="step">
-                            <div class="step-circle">✓</div>
-                            <div class="step-label">Printing</div>
-                        </div>
-
-                        <div class="step">
-                            <div class="step-circle">✓</div>
-                            <div class="step-label">Completed</div>
-                        </div>
-
+                    <div class="workflow-bar" aria-label="Live workflow counts">
+                        <div><strong>{{ pending_jobs }}</strong><span>Pending</span></div>
+                        <div><strong>{{ processing_jobs }}</strong><span>Processing</span></div>
+                        <div><strong>{{ ready_jobs }}</strong><span>Ready</span></div>
+                        <div><strong>{{ completed_jobs }}</strong><span>Completed</span></div>
                     </div>
 
                 </div>
@@ -959,43 +970,14 @@
 
                         </div>
 
-                        <div class="chart">
-
-                            <svg viewBox="0 0 330 175" xmlns="http://www.w3.org/2000/svg">
-
-                                <rect width="330" height="175" fill="#ffffff"/>
-
-                                <line x1="30" y1="20" x2="30" y2="142" stroke="#ededf4"/>
-                                <line x1="30" y1="142" x2="305" y2="142" stroke="#ededf4"/>
-
-                                <path
-                                    d="M30 105 C62 72,92 72,120 90 C148 110,171 102,190 80 C211 56,232 53,254 67 C277 82,290 90,305 78 L305 142 L30 142 Z"
-                                    fill="#dce6ff"
-                                />
-
-                                <path
-                                    d="M30 103 C61 80,90 73,119 86 C145 99,166 104,190 82 C211 62,232 55,253 66 C278 80,290 91,305 79"
-                                    fill="none"
-                                    stroke="#9e91ff"
-                                    stroke-width="3"
-                                />
-
-                                <path
-                                    d="M30 110 C63 88,90 83,118 96 C145 108,169 105,190 82 C211 59,234 48,257 61 C279 73,293 89,305 72"
-                                    fill="none"
-                                    stroke="#7eb5ff"
-                                    stroke-width="3"
-                                />
-
-                                <text x="30" y="159" fill="#9994ad" font-size="10">Mar</text>
-                                <text x="80" y="159" fill="#9994ad" font-size="10">Apr</text>
-                                <text x="130" y="159" fill="#9994ad" font-size="10">May</text>
-                                <text x="180" y="159" fill="#9994ad" font-size="10">Jun</text>
-                                <text x="230" y="159" fill="#9994ad" font-size="10">Jul</text>
-                                <text x="280" y="159" fill="#9994ad" font-size="10">Aug</text>
-
-                            </svg>
-
+                        <div class="sales-chart" aria-label="Completed-order revenue over six months">
+                            {% for month in monthly_sales %}
+                            <div class="sales-column" title="{{ month.label }}: ₱{{ month.revenue }}">
+                                <span class="bar-amount">₱{{ month.revenue|floatformat:0 }}</span>
+                                <div class="sales-bar" style="height:{{ month.bar_height }}%"></div>
+                                <span class="bar-month">{{ month.label }}</span>
+                            </div>
+                            {% endfor %}
                         </div>
 
                     </div>
@@ -1022,100 +1004,15 @@
 
                         </div>
 
-                        <div class="summary-grid">
-
-                            <div class="summary-tag watch">
-                                Total Jobs
-                            </div>
-
-                            <div class="summary-value purple">
-                                {{ total_jobs }}
-                            </div>
-
-                            <div class="summary-value purple">
-                                {{ pending_jobs }}
-                            </div>
-
-                            <div class="summary-value purple">
-                                {{ customer_count }}
-                            </div>
-
-                            <div class="summary-value purple">
-                                Live
-                            </div>
-
-                        </div>
-
-                        <div class="summary-grid">
-
-                            <div class="summary-tag processing">
-                                Processing
-                            </div>
-
-                            <div class="summary-value">
-                                {{ total_jobs }}
-                            </div>
-
-                            <div class="summary-value">
-                                {{ pending_jobs }}
-                            </div>
-
-                            <div class="summary-value">
-                                Active
-                            </div>
-
-                            <div class="summary-value">
-                                24/7
-                            </div>
-
-                        </div>
-
-                        <div class="summary-grid">
-
-                            <div class="summary-tag pending">
-                                Pending
-                            </div>
-
-                            <div class="summary-value">
-                                {{ pending_jobs }}
-                            </div>
-
-                            <div class="summary-value">
-                                Queue
-                            </div>
-
-                            <div class="summary-value">
-                                Active
-                            </div>
-
-                            <div class="summary-value">
-                                Open
-                            </div>
-
-                        </div>
-
-                        <div class="summary-grid">
-
-                            <div class="summary-tag printing">
-                                Printing
-                            </div>
-
-                            <div class="summary-value">
-                                Fast
-                            </div>
-
-                            <div class="summary-value">
-                                Ready
-                            </div>
-
-                            <div class="summary-value">
-                                Track
-                            </div>
-
-                            <div class="summary-value">
-                                Live
-                            </div>
-
+                        <div class="summary-stats">
+                            <div><span>Total jobs</span><strong>{{ total_jobs }}</strong></div>
+                            <div><span>Pending</span><strong>{{ pending_jobs }}</strong></div>
+                            <div><span>Processing</span><strong>{{ processing_jobs }}</strong></div>
+                            <div><span>Ready</span><strong>{{ ready_jobs }}</strong></div>
+                            <div><span>Completed</span><strong>{{ completed_jobs }}</strong></div>
+                            <div><span>Cancelled</span><strong>{{ cancelled_jobs }}</strong></div>
+                            <div><span>Customers</span><strong>{{ customer_count }}</strong></div>
+                            <div><span>Completed sales</span><strong>₱{{ total_revenue }}</strong></div>
                         </div>
 
                     </div>
@@ -1135,9 +1032,9 @@
             const jobs = document.querySelectorAll(".job-item");
 
             jobs.forEach(function(job) {
-                const text = job.textContent.toLowerCase();
-
-                if (text.includes(filter)) {
+                const text = job.dataset.search || "";
+                const status = document.getElementById("statusFilter").value;
+                if (text.includes(filter) && (!status || job.dataset.status === status)) {
                     job.style.display = "grid";
                 } else {
                     job.style.display = "none";

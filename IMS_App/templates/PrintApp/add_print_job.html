@@ -471,6 +471,7 @@
                         </div>
 
                         <form method="POST">
+                        {{ form.non_field_errors }}
 
                             {% csrf_token %}
 
@@ -536,7 +537,7 @@
                                     <div class="form-group">
 
                                         <label for="{{ form.total_price.id_for_label }}">
-                                            Total Price
+                                            Calculated Total (PHP)
                                         </label>
 
                                         {{ form.total_price }}
@@ -577,6 +578,8 @@
 
                             </div>
 
+                        <datalist id="print-type-suggestions"><option value="Document"><option value="Photo"><option value="Tarpaulin"></datalist>
+                        <p class="pricing-hint" role="status" aria-live="polite" style="font-size:12px;color:#756e94;margin:12px 0">Total is calculated from administrator-configured prices. Enter the print type, size, color and quantity.</p>
                         </form>
 
                     </div>
@@ -589,5 +592,43 @@
 
     </div>
 
+{{ pricing_rates|json_script:"paprint-prices" }}
+<script>
+(function () {
+    const data = JSON.parse(document.getElementById("paprint-prices").textContent);
+    const fields = {
+        print_type: document.getElementById("id_print_type"),
+        paper_size: document.getElementById("id_paper_size"),
+        color_mode: document.getElementById("id_color_mode"),
+        quantity: document.getElementById("id_quantity"),
+        total_price: document.getElementById("id_total_price")
+    };
+    const hint = document.querySelector(".pricing-hint");
+    function updateEstimate() {
+        const type = fields.print_type.value.trim().toLowerCase();
+        const size = fields.paper_size.value;
+        const color = fields.color_mode.value;
+        const count = Number(fields.quantity.value);
+        const rate = data.find(function (item) {
+            return item.print_type.toLowerCase() === type &&
+                item.paper_size === size && item.color_mode === color;
+        });
+        if (rate && Number.isInteger(count) && count > 0) {
+            const total = (Number(rate.unit_price) * count).toFixed(2);
+            fields.total_price.value = total;
+            hint.textContent = "Estimated total: PHP " + total +
+                " (PHP " + Number(rate.unit_price).toFixed(2) + " per item). Confirmed by Django on save.";
+        } else {
+            fields.total_price.value = "";
+            hint.textContent = "No matching price configured. Ask an administrator to add a Pricing Rule.";
+        }
+    }
+    ["print_type", "paper_size", "color_mode", "quantity"].forEach(function (key) {
+        fields[key].addEventListener("input", updateEstimate);
+        fields[key].addEventListener("change", updateEstimate);
+    });
+    updateEstimate();
+})();
+</script>
 </body>
 </html>
