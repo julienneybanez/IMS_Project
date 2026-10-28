@@ -70,3 +70,22 @@ python manage.py makemigrations --check --dry-run
 The repository already tracks db.sqlite3 and may contain historical local data.
 Do not commit live customer data or passwords. New deployments should use their own
 database and keep secrets, backups and environment files outside version control.
+
+
+## PaPrint-themed Django Admin
+
+Django Admin (/admin/) is branded to match PaPrint's purple-and-white interface,
+including its header, sidebar, data tables, forms, action buttons, and sign-in page.
+The built-in Django Admin features (permissions, filtering, bulk actions, and
+theme toggle) are preserved.
+
+- Theme template: `templates/admin/base_site.html`
+- Theme CSS: `IMS_App/static/paprint/css/admin.css`
+- The template loader uses `BASE_DIR / 'templates'` so the
+  project's branded site template takes precedence over Django's default.
+- Static files are discovered through `django.contrib.staticfiles` in the
+  installed `IMS_App`; no external packages are required.
+
+After pulling, restart the development server and hard-refresh the Admin page
+(`Ctrl+Shift+R`) if your browser has cached the old CSS.
+For production hosting, ensure static files are collected and served correctly.

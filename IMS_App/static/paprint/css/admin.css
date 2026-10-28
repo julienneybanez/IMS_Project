@@ -1,0 +1,410 @@
+/*
+ * PaPrint's custom Django Admin theme.
+ * Loaded from templates/admin/base_site.html after Django's base.css.
+ * All functionality and native Django Admin templates remain intact.
+ */
+:root {
+    color-scheme: light;
+    --pp-bg: #f6f6fa;
+    --pp-surface: #ffffff;
+    --pp-soft: #f8f7fc;
+    --pp-line: #e8e7f0;
+    --pp-text: #3f3a59;
+    --pp-muted: #827d99;
+    --pp-purple: #6f63ff;
+    --pp-purple-dark: #5d52ea;
+    --pp-purple-soft: #f0eeff;
+    --pp-shadow: 0 8px 28px rgba(66, 50, 125, 0.055);
+
+    --primary: #6f63ff;
+    --secondary: #5d52ea;
+    --accent: #ffffff;
+    --primary-fg: #ffffff;
+    --body-fg: #3f3a59;
+    --body-bg: #f6f6fa;
+    --body-quiet-color: #827d99;
+    --body-medium-color: #686280;
+    --header-color: #3f3a59;
+    --header-branding-color: #3f3a59;
+    --header-bg: #ffffff;
+    --header-link-color: #5d52ea;
+    --breadcrumbs-fg: #686280;
+    --breadcrumbs-link-fg: #5d52ea;
+    --breadcrumbs-bg: #f0eeff;
+    --link-fg: #6155e6;
+    --link-hover-color: #4b3dd8;
+    --link-selected-fg: #5d52ea;
+    --hairline-color: #e8e7f0;
+    --border-color: #e8e7f0;
+    --darkened-bg: #f3f2fb;
+    --selected-bg: #f0eeff;
+    --selected-row: #f6f4ff;
+    --button-fg: #ffffff;
+    --button-bg: #6f63ff;
+    --button-hover-bg: #5d52ea;
+    --default-button-bg: #6f63ff;
+    --default-button-hover-bg: #5d52ea;
+    --close-button-bg: #716b85;
+    --close-button-hover-bg: #5e586f;
+}
+html[data-theme="dark"] {
+    color-scheme: dark;
+    --pp-bg: #191725;
+    --pp-surface: #242135;
+    --pp-soft: #2a273d;
+    --pp-line: #3c3654;
+    --pp-text: #efecfa;
+    --pp-muted: #b6b0cf;
+    --pp-purple: #a198ff;
+    --pp-purple-dark: #8277f2;
+    --pp-purple-soft: #383251;
+    --pp-shadow: 0 10px 30px rgba(0, 0, 0, 0.17);
+}
+@media (prefers-color-scheme: dark) {
+    html[data-theme="auto"] {
+        color-scheme: dark;
+        --pp-bg: #191725;
+        --pp-surface: #242135;
+        --pp-soft: #2a273d;
+        --pp-line: #3c3654;
+        --pp-text: #efecfa;
+        --pp-muted: #b6b0cf;
+        --pp-purple: #a198ff;
+        --pp-purple-dark: #8277f2;
+        --pp-purple-soft: #383251;
+        --pp-shadow: 0 10px 30px rgba(0, 0, 0, 0.17);
+    }
+}
+
+/* Basic surfaces and shared type */
+body, #container {
+    background: var(--pp-bg);
+    color: var(--pp-text);
+    font-family: Arial, Helvetica, sans-serif;
+}
+a:link, a:visited { color: var(--pp-purple-dark); }
+a:hover { color: var(--pp-purple); }
+a:focus-visible, button:focus-visible, input:focus-visible,
+select:focus-visible, textarea:focus-visible {
+    outline: 3px solid var(--pp-purple) !important;
+    outline-offset: 2px;
+}
+h1, h2, h3, h4 { color: var(--pp-text); }
+#content h1 {
+    margin: 6px 0 22px;
+    font-weight: 800;
+    letter-spacing: -0.035em;
+    font-size: clamp(23px, 2.6vw, 30px);
+}
+#content h2 { font-weight: 750; }
+#content { padding: 26px clamp(16px, 3.5vw, 42px) 42px; }
+#content-main { min-width: 0; }
+
+/* Branded header, using the same five-color mark as PaPrint */
+#header {
+    min-height: 78px;
+    padding: 15px clamp(15px, 3vw, 35px);
+    box-sizing: border-box;
+    background: var(--pp-surface);
+    color: var(--pp-text);
+    border-bottom: 1px solid var(--pp-line);
+    box-shadow: 0 2px 12px rgba(62, 49, 125, 0.035);
+    gap: 15px;
+}
+#branding { float: none; }
+.paprint-brand { display: flex; align-items: center; gap: 14px; min-height: 48px; }
+.paprint-mark { position: relative; width: 42px; height: 42px; display: block; flex: none; }
+.paprint-mark i { width: 17px; height: 17px; display: block; position: absolute; border-radius: 50%; }
+.paprint-mark i:nth-child(1) { background: #f1788c; top: 0; left: 13px; }
+.paprint-mark i:nth-child(2) { background: #7868ff; top: 11px; left: 0; }
+.paprint-mark i:nth-child(3) { background: #6bc550; top: 11px; right: 0; }
+.paprint-mark i:nth-child(4) { background: #f1bc42; bottom: 0; left: 13px; }
+.paprint-mark i:nth-child(5) { background: #617fff; width: 13px; height: 13px; top: 13px; left: 15px; }
+.paprint-brand-copy { display: flex; flex-direction: column; gap: 3px; }
+#branding #site-name, #branding #site-name a {
+    font-size: 24px;
+    font-weight: 800;
+    line-height: 1.04;
+    letter-spacing: -0.04em;
+    margin: 0;
+    color: var(--pp-text);
+    text-decoration: none;
+}
+.paprint-admin-pill {
+    display: inline-block;
+    padding: 4px 7px;
+    border-radius: 6px;
+    background: var(--pp-purple-soft);
+    color: var(--pp-purple-dark);
+    font-size: 10px;
+    letter-spacing: 0.07em;
+    font-weight: 800;
+    vertical-align: middle;
+    transform: translateY(-2px);
+}
+.paprint-tagline { color: var(--pp-muted); font-size: 11px; letter-spacing: 0.01em; }
+#user-tools { float: none; font-weight: 600; color: var(--pp-muted); }
+#user-tools, #user-tools a, #user-tools button { font-size: 12px; }
+#user-tools a:link, #user-tools a:visited, #user-tools button {
+    color: var(--pp-text);
+    text-decoration: none;
+}
+#user-tools a:hover, #user-tools button:hover { color: var(--pp-purple-dark); }
+#user-tools button { background: transparent; border: 0; border-radius: 8px; }
+#user-tools .theme-toggle { border-radius: 10px; }
+
+/* Breadcrumbs and the app navigation sidebar */
+div.breadcrumbs {
+    padding: 13px clamp(16px, 3.5vw, 42px);
+    background: var(--pp-purple-soft);
+    color: var(--pp-muted);
+    border-bottom: 1px solid var(--pp-line);
+    font-size: 12px;
+    font-weight: 600;
+}
+div.breadcrumbs a:link, div.breadcrumbs a:visited { color: var(--pp-purple-dark); }
+#nav-sidebar {
+    background: var(--pp-surface);
+    border-right: 1px solid var(--pp-line);
+    box-shadow: none;
+}
+#nav-sidebar .module, #nav-sidebar table {
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
+}
+#nav-sidebar .module th, #nav-sidebar .module td { border-bottom: none; }
+#nav-sidebar a:link, #nav-sidebar a:visited {
+    color: var(--pp-text);
+    font-size: 13px;
+    text-decoration: none;
+}
+#nav-sidebar a:hover { color: var(--pp-purple-dark); }
+#nav-sidebar .current-model a, #nav-sidebar .current-app .section {
+    color: var(--pp-purple-dark);
+    font-weight: 800;
+}
+#nav-sidebar .current-model { background: var(--pp-purple-soft); }
+#nav-sidebar .module caption, #nav-sidebar .module h2 {
+    padding: 14px 17px 7px;
+    color: var(--pp-muted);
+    background: transparent;
+    text-transform: uppercase;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    font-weight: 800;
+}
+#nav-sidebar .module tbody tr td, #nav-sidebar .module tbody tr th { padding: 10px 14px; }
+#nav-filter { border-radius: 10px; border: 1px solid var(--pp-line); }
+.toggle-nav-sidebar {
+    background: var(--pp-surface);
+    color: var(--pp-purple-dark);
+    border-right: 1px solid var(--pp-line);
+}
+.toggle-nav-sidebar:hover { background: var(--pp-purple-soft); }
+
+/* Dashboard cards and all admin modules */
+.module, .inline-group, #content-related .module, .dashboard .module {
+    border: 1px solid var(--pp-line);
+    border-radius: 15px;
+    background: var(--pp-surface);
+    box-shadow: var(--pp-shadow);
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+.module h2, .module caption, .inline-group h2, .module .section,
+#content-related .module h2 {
+    margin: 0;
+    padding: 14px 18px;
+    background: var(--pp-purple-soft);
+    color: var(--pp-text);
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.015em;
+    text-transform: none;
+}
+.module caption a:link, .module caption a:visited,
+.module h2 a:link, .module h2 a:visited { color: var(--pp-text); }
+.dashboard #content-related { width: auto; }
+#content-related .module ul { margin: 13px 18px; padding: 0; }
+#content-related .module li { line-height: 1.55; margin-bottom: 8px; }
+
+/* Tables, results and list actions */
+table { color: var(--pp-text); }
+#changelist .results { overflow-x: auto; border-radius: 12px; }
+#changelist .results table { width: 100%; }
+#changelist .results table, .module table, #change-history table {
+    background: var(--pp-surface);
+}
+thead th, thead th a:link, thead th a:visited {
+    color: var(--pp-text);
+    font-weight: 800;
+}
+thead th {
+    background: var(--pp-soft);
+    border-bottom: 1px solid var(--pp-line);
+    padding: 12px 10px;
+}
+tbody tr:nth-child(odd), tbody tr:nth-child(even) { background: var(--pp-surface); }
+tbody tr:hover, #changelist table tbody tr:hover { background: var(--pp-purple-soft); }
+tbody td, tbody th {
+    border-bottom: 1px solid var(--pp-line);
+    padding: 12px 10px;
+}
+#changelist-form .results { border: 1px solid var(--pp-line); }
+#changelist-filter {
+    background: var(--pp-surface);
+    border-radius: 14px;
+    border: 1px solid var(--pp-line);
+    overflow: hidden;
+}
+#changelist-filter h2 {
+    background: var(--pp-purple-soft);
+    color: var(--pp-text);
+    padding: 15px 18px;
+}
+#changelist-filter h3 { color: var(--pp-muted); font-weight: 800; }
+#changelist-filter a { color: var(--pp-text); }
+#changelist-filter li.selected a { color: var(--pp-purple-dark); }
+#changelist .actions, #changelist-search, .paginator {
+    background: var(--pp-surface);
+    border-color: var(--pp-line);
+}
+#changelist .actions { padding: 12px; border-radius: 12px; }
+#changelist-search { padding: 12px 14px; }
+#changelist-search input[type="text"] { min-height: 38px; }
+#changelist .paginator { border-top: 1px solid var(--pp-line); padding: 14px; }
+
+/* Form layout and focus */
+fieldset, .aligned fieldset { border-color: var(--pp-line); }
+.form-row { border-bottom: 1px solid var(--pp-line); }
+.form-row:last-child { border-bottom: 0; }
+.aligned label, label, .form-row label { color: var(--pp-text); font-weight: 700; }
+.help, p.help, .helptext { color: var(--pp-muted); }
+input[type="text"], input[type="password"], input[type="number"], input[type="email"],
+input[type="url"], input[type="search"], input[type="date"], input[type="datetime-local"],
+textarea, select, .vTextField {
+    color: var(--pp-text);
+    background: var(--pp-surface);
+    border: 1px solid var(--pp-line);
+    border-radius: 9px;
+    padding: 9px 11px;
+    box-sizing: border-box;
+    max-width: 100%;
+}
+select { min-height: 37px; }
+input:focus, textarea:focus, select:focus {
+    border-color: var(--pp-purple);
+    box-shadow: 0 0 0 3px rgba(111, 99, 255, 0.12);
+}
+input[type="checkbox"] { accent-color: #6f63ff; }
+.selector-chosen h2 { background: var(--pp-purple-soft); color: var(--pp-text); }
+.inline-related h3 { color: var(--pp-text); background: var(--pp-soft); }
+.inline-group .tabular tr.has_original td { padding-top: 13px; }
+
+/* Primary actions, save buttons and non-destructive links */
+.button, input[type="submit"], input[type="button"], .submit-row input,
+a.button, .object-tools a:link, .object-tools a:visited {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 36px;
+    border-radius: 9px;
+    background: #6f63ff;
+    color: white;
+    border: 1px solid transparent;
+    font-size: 12px;
+    font-weight: 750;
+    line-height: 1.25;
+    text-decoration: none;
+    box-shadow: none;
+    transition: background-color .16s ease, box-shadow .16s ease;
+}
+.button:hover, input[type="submit"]:hover, input[type="button"]:hover,
+.submit-row input:hover, a.button:hover, .object-tools a:hover {
+    background: #5d52ea;
+    color: white;
+    box-shadow: 0 3px 10px rgba(111, 99, 255, .15);
+}
+.button.default, input[type="submit"].default, .submit-row input.default {
+    background: #5d52ea;
+    color: #fff;
+}
+.submit-row {
+    border: 1px solid var(--pp-line);
+    background: var(--pp-surface);
+    padding: 15px;
+    border-radius: 13px;
+}
+.submit-row .deletelink { background: #c74670; border-radius: 9px; }
+.submit-row .deletelink:hover { background: #a73259; }
+.deletelink { color: #bf4469; }
+.object-tools { margin-top: 0; }
+.object-tools a.addlink:link, .object-tools a.addlink:visited { background: #6f63ff; }
+.messagelist li {
+    border: 1px solid var(--pp-line);
+    border-radius: 11px;
+    margin-bottom: 10px;
+    box-shadow: var(--pp-shadow);
+}
+.messagelist li.success { border-left: 4px solid #57ad4a; }
+.errornote, ul.errorlist { border-radius: 9px; }
+
+/* The login screen uses the same card and brand as PaPrint. */
+body.login {
+    background: linear-gradient(125deg, #f6f6fa 0%, #f0eeff 100%);
+}
+.login #container {
+    width: min(440px, calc(100vw - 28px));
+    margin: min(9vh, 78px) auto 30px;
+    background: var(--pp-surface);
+    border: 1px solid var(--pp-line);
+    border-radius: 19px;
+    box-shadow: 0 20px 58px rgba(65, 53, 118, 0.12);
+    overflow: hidden;
+}
+.login #header {
+    padding: 27px 30px 18px;
+    border: 0;
+    box-shadow: none;
+}
+.login #content { padding: 10px 30px 30px; }
+.login #content-main { width: 100%; }
+.login .form-row { border: 0; padding: 8px 0; }
+.login .form-row label { display: block; margin: 0 0 8px; }
+.login input[type="text"], .login input[type="password"] { width: 100%; min-height: 43px; }
+.login .submit-row { border: 0; padding: 16px 0 0; text-align: initial; }
+.login .submit-row input { width: 100%; min-height: 43px; }
+.login .password-reset-link { margin-top: 12px; }
+
+/* Dark mode: keep custom surfaces in sync with the built-in theme toggle. */
+html[data-theme="dark"] body,
+html[data-theme="dark"] #container {
+    background: var(--pp-bg);
+}
+html[data-theme="dark"] #header,
+html[data-theme="dark"] .module,
+html[data-theme="dark"] #nav-sidebar,
+html[data-theme="dark"] .submit-row {
+    color: var(--pp-text);
+}
+@media (prefers-color-scheme: dark) {
+    html[data-theme="auto"] body.login { background: linear-gradient(125deg,#191725,#28213d); }
+}
+html[data-theme="dark"] body.login { background: linear-gradient(125deg,#191725,#28213d); }
+
+@media (max-width: 767px) {
+    #header { padding: 13px 16px; min-height: auto; }
+    #branding #site-name, #branding #site-name a { font-size: 21px; }
+    #user-tools { line-height: 1.7; }
+    #content { padding: 20px 14px 32px; }
+    .object-tools { float: none; margin: 0 0 18px; }
+    .object-tools li { margin: 0 8px 8px 0; }
+    .login #container { margin-top: 8vh; }
+    .login #header { padding: 24px 21px 10px; }
+    .login #content { padding: 10px 21px 25px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .button, input[type="submit"], input[type="button"], a.button { transition: none; }
+}

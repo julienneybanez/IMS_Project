@@ -147,3 +147,24 @@ class PrintAppTests(TestCase):
             self.client.get(reverse("admin:IMS_App_pricerule_changelist")).status_code,
             403,
         )
+
+
+    def test_admin_pages_load_paprint_theme(self):
+        from django.contrib.staticfiles import finders
+
+        User = get_user_model()
+        superuser = User.objects.create_superuser(
+            username="admin-theme", password="password123",
+            email="admin-theme@example.invalid",
+        )
+        self.client.force_login(superuser)
+        response = self.client.get(reverse("admin:index"))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "paprint/css/admin.css")
+        self.assertContains(response, "paprint-mark")
+        self.assertIsNotNone(finders.find("paprint/css/admin.css"))
+
+        self.client.logout()
+        response = self.client.get(reverse("admin:login"))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "paprint/css/admin.css")

@@ -1,0 +1,25 @@
+{% extends "admin/base.html" %}
+{% load i18n static %}
+
+{% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | {{ site_title|default:_("Django site admin") }}{% endblock %}
+
+{% block extrastyle %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'paprint/css/admin.css' %}">
+{% endblock %}
+
+{% block branding %}
+    <div class="paprint-brand">
+        <span class="paprint-mark" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i>
+        </span>
+        <span class="paprint-brand-copy">
+            <span id="site-name">
+                <a href="{% url 'admin:index' %}" aria-label="PaPrint Admin home">
+                    PaPrint <span class="paprint-admin-pill">ADMIN</span>
+                </a>
+            </span>
+            <span class="paprint-tagline">Print shop management</span>
+        </span>
+    </div>
+{% endblock %}
