@@ -974,7 +974,7 @@
                             {% for month in monthly_sales %}
                             <div class="sales-column" title="{{ month.label }}: ₱{{ month.revenue }}">
                                 <span class="bar-amount">₱{{ month.revenue|floatformat:0 }}</span>
-                                <div class="sales-bar" style="height:{{ month.bar_height }}%"></div>
+                                <div class="sales-bar" data-height="{{ month.bar_height }}"></div>
                                 <span class="bar-month">{{ month.label }}</span>
                             </div>
                             {% endfor %}
@@ -1026,6 +1026,16 @@
     </div>
 
     <script>
+        // Django renders a numeric data attribute; JavaScript sets the CSS height.
+        // This avoids template expressions in inline CSS, which VS Code flags.
+        document.querySelectorAll(".sales-bar[data-height]").forEach(function (bar) {
+            const value = Number(bar.dataset.height);
+            const height = Number.isFinite(value)
+                ? Math.max(3, Math.min(100, value))
+                : 3;
+            bar.style.height = height + "%";
+        });
+
         function searchJobs() {
             const input = document.getElementById("searchInput");
             const filter = input.value.toLowerCase();
