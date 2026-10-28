@@ -3,7 +3,8 @@
  * Loaded from templates/admin/base_site.html after Django's base.css.
  * All functionality and native Django Admin templates remain intact.
  */
-:root {
+:root,
+html[data-theme="light"] {
     color-scheme: light;
     --pp-bg: #f6f6fa;
     --pp-surface: #ffffff;
@@ -50,29 +51,95 @@
 html[data-theme="dark"] {
     color-scheme: dark;
     --pp-bg: #191725;
-    --pp-surface: #242135;
-    --pp-soft: #2a273d;
-    --pp-line: #3c3654;
-    --pp-text: #efecfa;
-    --pp-muted: #b6b0cf;
-    --pp-purple: #a198ff;
-    --pp-purple-dark: #8277f2;
-    --pp-purple-soft: #383251;
-    --pp-shadow: 0 10px 30px rgba(0, 0, 0, 0.17);
+    --pp-surface: #252238;
+    --pp-soft: #2e2a43;
+    --pp-line: #47415e;
+    --pp-text: #f2effa;
+    --pp-muted: #c9c2db;
+    --pp-purple: #a99fff;
+    --pp-purple-dark: #c3baff;
+    --pp-purple-soft: #393352;
+    --pp-shadow: 0 10px 28px rgba(0, 0, 0, .16);
+
+    /* Keep Django's page-specific CSS in the same color scheme. */
+    --primary: #7465f2;
+    --secondary: #6254d8;
+    --accent: #f2effa;
+    --primary-fg: #fff;
+    --body-fg: #f2effa;
+    --body-bg: #191725;
+    --body-quiet-color: #d2cde2;
+    --body-medium-color: #e1dced;
+    --body-loud-color: #fff;
+    --header-color: #f2effa;
+    --header-branding-color: #f2effa;
+    --header-bg: #252238;
+    --header-link-color: #d3cbff;
+    --breadcrumbs-fg: #dad4ef;
+    --breadcrumbs-link-fg: #cec5ff;
+    --breadcrumbs-bg: #393352;
+    --link-fg: #c3baff;
+    --link-hover-color: #e2dcff;
+    --link-selected-fg: #d0c7ff;
+    --hairline-color: #47415e;
+    --border-color: #47415e;
+    --darkened-bg: #2e2a43;
+    --selected-bg: #393352;
+    --selected-row: #393352;
+    --button-fg: #fff;
+    --button-bg: #7465f2;
+    --button-hover-bg: #6254d8;
+    --default-button-bg: #7465f2;
+    --default-button-hover-bg: #6254d8;
+    --close-button-bg: #524e64;
+    --close-button-hover-bg: #625d76;
 }
 @media (prefers-color-scheme: dark) {
     html[data-theme="auto"] {
-        color-scheme: dark;
-        --pp-bg: #191725;
-        --pp-surface: #242135;
-        --pp-soft: #2a273d;
-        --pp-line: #3c3654;
-        --pp-text: #efecfa;
-        --pp-muted: #b6b0cf;
-        --pp-purple: #a198ff;
-        --pp-purple-dark: #8277f2;
-        --pp-purple-soft: #383251;
-        --pp-shadow: 0 10px 30px rgba(0, 0, 0, 0.17);
+    color-scheme: dark;
+    --pp-bg: #191725;
+    --pp-surface: #252238;
+    --pp-soft: #2e2a43;
+    --pp-line: #47415e;
+    --pp-text: #f2effa;
+    --pp-muted: #c9c2db;
+    --pp-purple: #a99fff;
+    --pp-purple-dark: #c3baff;
+    --pp-purple-soft: #393352;
+    --pp-shadow: 0 10px 28px rgba(0, 0, 0, .16);
+
+    /* Keep Django's page-specific CSS in the same color scheme. */
+    --primary: #7465f2;
+    --secondary: #6254d8;
+    --accent: #f2effa;
+    --primary-fg: #fff;
+    --body-fg: #f2effa;
+    --body-bg: #191725;
+    --body-quiet-color: #d2cde2;
+    --body-medium-color: #e1dced;
+    --body-loud-color: #fff;
+    --header-color: #f2effa;
+    --header-branding-color: #f2effa;
+    --header-bg: #252238;
+    --header-link-color: #d3cbff;
+    --breadcrumbs-fg: #dad4ef;
+    --breadcrumbs-link-fg: #cec5ff;
+    --breadcrumbs-bg: #393352;
+    --link-fg: #c3baff;
+    --link-hover-color: #e2dcff;
+    --link-selected-fg: #d0c7ff;
+    --hairline-color: #47415e;
+    --border-color: #47415e;
+    --darkened-bg: #2e2a43;
+    --selected-bg: #393352;
+    --selected-row: #393352;
+    --button-fg: #fff;
+    --button-bg: #7465f2;
+    --button-hover-bg: #6254d8;
+    --default-button-bg: #7465f2;
+    --default-button-hover-bg: #6254d8;
+    --close-button-bg: #524e64;
+    --close-button-hover-bg: #625d76;
     }
 }
 
@@ -153,7 +220,7 @@ h1, h2, h3, h4 { color: var(--pp-text); }
 #user-tools button { background: transparent; border: 0; border-radius: 8px; }
 #user-tools .theme-toggle { border-radius: 10px; }
 
-/* Breadcrumbs and the app navigation sidebar */
+/* Breadcrumbs and sidebar; never style <a.section> as a heading. */
 div.breadcrumbs {
     padding: 13px clamp(16px, 3.5vw, 42px);
     background: var(--pp-purple-soft);
@@ -168,35 +235,87 @@ div.breadcrumbs a:link, div.breadcrumbs a:visited { color: var(--pp-purple-dark)
     border-right: 1px solid var(--pp-line);
     box-shadow: none;
 }
-#nav-sidebar .module, #nav-sidebar table {
-    border: none;
+#nav-sidebar .module {
+    border: 0;
     border-radius: 0;
     box-shadow: none;
+    overflow: visible;
+    background: transparent;
+    margin: 0 0 14px;
+}
+#nav-sidebar .module table {
+    width: 100%;
+    border: 0;
+    border-collapse: collapse;
+    table-layout: auto;
     background: transparent;
 }
-#nav-sidebar .module th, #nav-sidebar .module td { border-bottom: none; }
-#nav-sidebar a:link, #nav-sidebar a:visited {
+#nav-sidebar .module caption {
+    display: table-caption;
+    width: auto;
+    max-width: none;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 14px 16px 9px;
+    background: transparent;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .035em;
+    line-height: 1.45;
+    text-transform: none;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+#nav-sidebar .module caption a.section:link,
+#nav-sidebar .module caption a.section:visited {
+    display: block;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    color: var(--pp-muted);
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    letter-spacing: inherit;
+    text-decoration: none;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+#nav-sidebar .module caption a.section:hover { color: var(--pp-purple-dark); }
+#nav-sidebar .module tbody th,
+#nav-sidebar .module tbody td {
+    border-bottom: 0;
+    padding: 10px 7px 10px 16px;
+    vertical-align: middle;
+}
+#nav-sidebar .module tbody th { width: auto; min-width: 0; overflow-wrap: anywhere; }
+#nav-sidebar .module tbody td { width: 58px; padding-left: 4px; padding-right: 12px; text-align: right; white-space: nowrap; }
+#nav-sidebar .module tbody th a:link,
+#nav-sidebar .module tbody th a:visited {
     color: var(--pp-text);
     font-size: 13px;
+    font-weight: 500;
     text-decoration: none;
 }
-#nav-sidebar a:hover { color: var(--pp-purple-dark); }
-#nav-sidebar .current-model a, #nav-sidebar .current-app .section {
-    color: var(--pp-purple-dark);
-    font-weight: 800;
-}
+#nav-sidebar .module tbody th a:hover { color: var(--pp-purple-dark); }
 #nav-sidebar .current-model { background: var(--pp-purple-soft); }
-#nav-sidebar .module caption, #nav-sidebar .module h2 {
-    padding: 14px 17px 7px;
-    color: var(--pp-muted);
-    background: transparent;
-    text-transform: uppercase;
-    font-size: 10px;
-    letter-spacing: 0.1em;
-    font-weight: 800;
+#nav-sidebar .current-model th a:link,
+#nav-sidebar .current-model th a:visited { color: var(--pp-purple-dark); font-weight: 800; }
+#nav-sidebar .module tbody td a:link,
+#nav-sidebar .module tbody td a:visited { color: var(--pp-purple-dark); font-weight: 650; }
+#nav-filter {
+    box-sizing: border-box;
+    width: calc(100% - 20px);
+    margin: 10px;
+    padding: 10px 12px;
+    min-height: 40px;
+    border: 1px solid var(--pp-line);
+    border-radius: 10px;
+    background: var(--pp-soft);
+    color: var(--pp-text);
 }
-#nav-sidebar .module tbody tr td, #nav-sidebar .module tbody tr th { padding: 10px 14px; }
-#nav-filter { border-radius: 10px; border: 1px solid var(--pp-line); }
+#nav-filter::placeholder { color: var(--pp-muted); opacity: 1; }
 .toggle-nav-sidebar {
     background: var(--pp-surface);
     color: var(--pp-purple-dark);
@@ -213,7 +332,7 @@ div.breadcrumbs a:link, div.breadcrumbs a:visited { color: var(--pp-purple-dark)
     overflow: hidden;
     margin-bottom: 20px;
 }
-.module h2, .module caption, .inline-group h2, .module .section,
+.module h2, .module caption, .inline-group h2,
 #content-related .module h2 {
     margin: 0;
     padding: 14px 18px;
@@ -478,4 +597,141 @@ html[data-theme="dark"] body.login { background: linear-gradient(125deg,#191725,
 }
 @media (prefers-reduced-motion: reduce) {
     .button, input[type="submit"], input[type="button"], a.button { transition: none; }
+}
+
+/* Audit of Django's changelist stylesheet: it loads its own table/toolbar/filter
+   selectors. The theme loads after page CSS and uses scoped selectors to avoid
+   affecting navigation tables or forms outside the changelist. */
+#changelist .changelist-form-container { gap: 22px; }
+#changelist .changelist-form-container:has(#changelist-filter) > div {
+    min-width: 0;
+    max-width: calc(100% - 262px);
+}
+#changelist #changelist-filter {
+    flex: 0 0 240px;
+    box-sizing: border-box;
+    min-width: 0;
+    margin: 0;
+    border: 1px solid var(--pp-line);
+    border-radius: 13px;
+    background: var(--pp-surface);
+    color: var(--pp-text);
+    overflow: hidden;
+}
+#changelist #changelist-filter h2 {
+    margin: 0 0 10px;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--pp-line);
+    background: var(--pp-purple-soft);
+    color: var(--pp-text);
+}
+#changelist #changelist-filter h3,
+#changelist #changelist-filter details summary {
+    padding: 7px 15px 4px;
+    margin: 0 0 4px;
+    font-weight: 750;
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--pp-muted);
+}
+#changelist #changelist-filter details summary { cursor: pointer; }
+#changelist #changelist-filter ul {
+    padding: 5px 15px 14px;
+    border-bottom: 1px solid var(--pp-line);
+}
+#changelist #changelist-filter a:link,
+#changelist #changelist-filter a:visited {
+    color: var(--pp-text);
+    line-height: 1.5;
+    padding: 3px 0;
+    text-decoration: none;
+}
+#changelist #changelist-filter a:hover,
+#changelist #changelist-filter li.selected a:link,
+#changelist #changelist-filter li.selected a:visited {
+    color: var(--pp-purple-dark);
+}
+#changelist #changelist-filter li.selected { border-left-color: var(--pp-purple); }
+#changelist #toolbar {
+    background: var(--pp-surface);
+    color: var(--pp-muted);
+    border: 1px solid var(--pp-line);
+    padding: 12px;
+    margin-bottom: 0;
+    border-radius: 13px 13px 0 0;
+}
+#changelist #toolbar form input[type="submit"] {
+    background: var(--pp-purple);
+    color: #fff;
+    box-shadow: none;
+    border-color: transparent;
+    min-height: 36px;
+    border-radius: 9px;
+}
+#changelist #toolbar form input[type="submit"]:hover { background: #5d52ea; }
+#changelist #toolbar #searchbar {
+    box-sizing: border-box;
+    background: var(--pp-soft);
+    border: 1px solid var(--pp-line);
+    color: var(--pp-text);
+    border-radius: 8px;
+    min-height: 36px;
+    height: auto;
+    padding: 8px 10px;
+}
+#changelist .actions { background: var(--pp-surface); color: var(--pp-text); }
+#changelist .actions select,
+#changelist .actions select option {
+    background: var(--pp-soft);
+    color: var(--pp-text);
+    border: 1px solid var(--pp-line);
+}
+#changelist .actions label { color: var(--pp-text); }
+#changelist .actions button { background: var(--pp-purple); color: #fff; border-radius: 8px; }
+#changelist table thead th,
+#changelist table thead th.sorted,
+#changelist table thead th.action-checkbox-column {
+    background: var(--pp-soft);
+    color: var(--pp-text);
+    border-bottom: 1px solid var(--pp-line);
+}
+#changelist table thead th a:link,
+#changelist table thead th a:visited,
+#changelist table thead th .text,
+#changelist table thead th .text span {
+    color: var(--pp-text);
+}
+#changelist table thead th.sorted .text a:link,
+#changelist table thead th.sorted .text a:visited { color: var(--pp-purple-dark); }
+#changelist table tbody th,
+#changelist table tbody td { color: var(--pp-text); background: transparent; }
+#changelist table tbody tr { background: var(--pp-surface); }
+#changelist table tbody tr:hover { background: var(--pp-purple-soft); }
+#changelist table tbody tr:has(.action-select:checked) { background: var(--pp-purple-soft); }
+#changelist table tbody a:link,
+#changelist table tbody a:visited { color: var(--pp-purple-dark); }
+#changelist #changelist-form .results { background: var(--pp-surface); }
+#changelist #changelist-form .results table { background: var(--pp-surface); }
+#changelist #changelist-form input[type="number"],
+#changelist #changelist-form input[type="text"] {
+    background: var(--pp-soft);
+    color: var(--pp-text);
+    border: 1px solid var(--pp-line);
+}
+#changelist .paginator { color: var(--pp-muted); }
+#changelist .paginator a:link, #changelist .paginator a:visited { color: var(--pp-purple-dark); }
+input[type="search"]::placeholder, input[type="text"]::placeholder { color: var(--pp-muted); opacity: 1; }
+html[data-theme="dark"] #changelist #toolbar form input[type="submit"]:hover { background: #8277f2; }
+@media (prefers-color-scheme: dark) {
+    html[data-theme="auto"] #changelist #toolbar form input[type="submit"]:hover { background: #8277f2; }
+}
+@media (max-width: 1024px) {
+    #changelist .changelist-form-container { gap: 12px; }
+    #changelist .changelist-form-container:has(#changelist-filter) > div { max-width: calc(100% - 252px); }
+}
+@media (max-width: 767px) {
+    #changelist .changelist-form-container:has(#changelist-filter) > div { max-width: 100%; }
+    #changelist .changelist-form-container { display: block; }
+    #changelist #changelist-filter { width: 100%; margin: 16px 0 0; }
+    #header { flex-wrap: wrap; }
 }

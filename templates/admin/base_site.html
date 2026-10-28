@@ -3,8 +3,9 @@
 
 {% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | {{ site_title|default:_("Django site admin") }}{% endblock %}
 
-{% block extrastyle %}
+{% block extrahead %}
     {{ block.super }}
+    {# Place PaPrint after Django's changelist, form and responsive styles. #}
     <link rel="stylesheet" href="{% static 'paprint/css/admin.css' %}">
 {% endblock %}
 
