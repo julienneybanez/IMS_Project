@@ -230,6 +230,77 @@ div.breadcrumbs a:link, div.breadcrumbs a:visited { color: var(--pp-purple-dark)
 #content-related .module ul { margin: 13px 18px; padding: 0; }
 #content-related .module li { line-height: 1.55; margin-bottom: 8px; }
 
+/* Recent actions: one clean card in light, dark and automatic themes.
+   Django's dashboard provides an extra #content-related wrapper; that wrapper
+   must not paint a square surface behind our rounded card. */
+.dashboard #content-related {
+    width: auto;
+    min-width: 0;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+}
+.dashboard #content-related #recent-actions-module {
+    margin: 0;
+    overflow: hidden;
+    border: 1px solid var(--pp-line);
+    border-radius: 18px;
+    background: var(--pp-surface);
+    box-shadow: 0 7px 22px rgba(66, 50, 125, 0.07);
+    color: var(--pp-text);
+}
+.dashboard #recent-actions-module > h2 {
+    margin: 0;
+    padding: 17px 20px;
+    border: 0;
+    border-bottom: 1px solid var(--pp-line);
+    background: var(--pp-purple-soft);
+    color: var(--pp-text);
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 1.35;
+}
+.dashboard #recent-actions-module > h3 {
+    margin: 0;
+    padding: 14px 20px 0;
+    background: transparent;
+    color: var(--pp-muted);
+    font-size: 12px;
+    font-weight: 750;
+    line-height: 1.45;
+}
+.dashboard #recent-actions-module > p {
+    margin: 0;
+    padding: 12px 20px 21px;
+    color: var(--pp-text);
+    font-size: 13px;
+    line-height: 1.5;
+}
+.dashboard #recent-actions-module .actionlist {
+    margin: 0;
+    padding: 11px 20px 20px 34px;
+}
+.dashboard #recent-actions-module .actionlist li {
+    color: var(--pp-text);
+    line-height: 1.5;
+    margin-bottom: 10px;
+}
+.dashboard #recent-actions-module .actionlist .quiet {
+    color: var(--pp-muted);
+}
+html[data-theme="dark"] .dashboard #recent-actions-module,
+html[data-theme="dark"] .dashboard #content-related {
+    box-shadow: none;
+}
+@media (prefers-color-scheme: dark) {
+    html[data-theme="auto"] .dashboard #recent-actions-module,
+    html[data-theme="auto"] .dashboard #content-related {
+        box-shadow: none;
+    }
+}
+
 /* Tables, results and list actions */
 table { color: var(--pp-text); }
 #changelist .results { overflow-x: auto; border-radius: 12px; }
